@@ -1,71 +1,99 @@
-# Instâncias EC2 na AWS
+# Gerenciamento de Instâncias EC2 na AWS  
 
-💻 Gerenciamento de Instâncias EC2 na AWS
-🌐 Visão Geral
+## 1. Introdução
 
-O Amazon EC2 (Elastic Compute Cloud) é um dos principais serviços da AWS e permite criar e gerenciar máquinas virtuais (chamadas de instâncias) na nuvem. Ele oferece poder de processamento sob demanda, escalabilidade e flexibilidade para rodar praticamente qualquer tipo de aplicação — de pequenos sites até grandes sistemas corporativos.
+Este repositório foi criado como parte do desafio de consolidação de conhecimentos sobre gerenciamento de instâncias EC2 na AWS.
+O objetivo é documentar, de forma clara e organizada, os principais conceitos, práticas e integrações envolvendo o EC2, EBS, S3 e Lambda — compondo uma visão geral de como esses serviços se relacionam dentro de uma arquitetura na nuvem.  
 
-Com o EC2, é possível escolher o tipo de instância, o sistema operacional, a quantidade de CPU e memória, e também configurar redes e segurança. Tudo isso pode ser gerenciado facilmente pelo Console da AWS, CLI (Command Line Interface) ou infraestrutura como código (IaC), como o Terraform ou AWS CloudFormation.
+## 2. O que é o Amazon EC2
 
-⚙️ Gerenciamento de Instâncias EC2
+O Amazon Elastic Compute Cloud (EC2) é um serviço de computação na nuvem que permite criar e gerenciar máquinas virtuais (instâncias) sob demanda. Ele oferece flexibilidade para escolher sistema operacional, capacidade de processamento, memória e configurações de rede, permitindo ajustar os recursos conforme a necessidade do projeto.
 
-O gerenciamento de instâncias EC2 envolve:
+Com o EC2, é possível:
 
-Criação e configuração: Escolher a AMI (Amazon Machine Image), tipo de instância, rede (VPC), grupos de segurança (firewalls) e pares de chaves (para acesso SSH).
+Criar e configurar instâncias rapidamente.
 
-Monitoramento: Utilizar o Amazon CloudWatch para acompanhar métricas como uso de CPU, memória e disco.
+Controlar segurança e acesso através de Security Groups e IAM Roles.
 
-Escalabilidade: Com Auto Scaling Groups, é possível aumentar ou reduzir automaticamente o número de instâncias conforme a demanda.
+Monitorar desempenho e eventos com CloudWatch.
 
-Segurança: Controlar acessos com IAM Roles, Security Groups e Network ACLs, garantindo que apenas usuários e serviços autorizados possam interagir com a instância.
+Escalar recursos automaticamente com Auto Scaling Groups.
 
-Automação: A criação, atualização e finalização de instâncias pode ser automatizada com scripts ou ferramentas como AWS Lambda e EventBridge.
+Automatizar operações utilizando scripts, Lambda ou EventBridge.
 
-💾 Armazenamento na Nuvem: EBS e S3
-🧱 EBS (Elastic Block Store)
+## 3. Armazenamento na Nuvem: EBS e S3  
 
-O Amazon EBS fornece volumes de armazenamento em blocos que podem ser anexados a instâncias EC2, funcionando como “discos virtuais”.
+**3.1 Amazon EBS (Elastic Block Store)**  
 
-Armazenamento persistente: os dados permanecem mesmo após a parada da instância.
+O Amazon EBS fornece volumes de armazenamento em blocos persistentes que podem ser anexados às instâncias EC2.
+Esses volumes funcionam como “discos virtuais” e permanecem disponíveis mesmo após a parada ou reinicialização da instância.
 
-Permite snapshots (cópias de segurança) e restauração rápida.
+Principais características:
 
-Ideal para sistemas operacionais, bancos de dados e aplicações que exigem acesso constante a dados em disco.
+Armazenamento persistente e confiável.
 
-☁️ S3 (Simple Storage Service)
+Possibilidade de criar snapshots para backup e restauração.
 
-O Amazon S3 é um serviço de armazenamento de objetos, usado para guardar e recuperar qualquer tipo de dado (imagens, vídeos, backups, logs, etc.).
+Ideal para sistemas de arquivos, bancos de dados e aplicações que exigem alta performance de I/O.
 
-Altamente escalável e durável.
+Pode ser facilmente redimensionado conforme a necessidade.  
 
-Permite controle de acesso, versionamento e políticas de ciclo de vida dos objetos.
+**3.2 Amazon S3 (Simple Storage Service)**
 
-Muito usado em conjunto com EC2 para armazenar dados de entrada/saída de aplicações, backups automáticos e arquivos estáticos.
+O Amazon S3 é um serviço de armazenamento de objetos projetado para armazenar e recuperar grandes quantidades de dados de forma simples e segura.
 
-⚡ AWS Lambda e Integração com EC2 e S3
+Principais características:
 
-O AWS Lambda é um serviço de computação sem servidor (serverless) que executa código sob demanda — sem a necessidade de gerenciar servidores.
+Alta durabilidade e escalabilidade.
 
-Você escreve apenas a função (em Python, Node.js, etc.) e define gatilhos (triggers) que a disparam, como o upload de um arquivo no S3, um evento no CloudWatch ou uma requisição HTTP via API Gateway.
+Armazenamento de qualquer tipo de dado (imagens, vídeos, logs, backups, etc.).
 
-Paga apenas pelo tempo de execução do código.
+Suporte a versionamento e políticas de ciclo de vida.
 
-💡 Exemplo de Arquitetura Integrada
+Integração com outros serviços da AWS, como EC2 e Lambda.
 
-Uma arquitetura comum integrando EC2, EBS, S3 e Lambda pode funcionar assim:
+O S3 é frequentemente utilizado em conjunto com EC2 para armazenar arquivos estáticos, backups de instâncias e dados de aplicações distribuídas.  
 
-Uma instância EC2 hospeda uma aplicação principal (ex: servidor web ou backend).
+## 4. AWS Lambda e Integração com EC2 e S3
 
-Essa instância utiliza EBS como armazenamento principal (sistema e banco de dados).
+O AWS Lambda é um serviço de computação serverless que executa código em resposta a eventos, sem necessidade de gerenciar servidores.
+Com ele, é possível automatizar fluxos e tarefas, pagando apenas pelo tempo efetivo de execução do código.
 
-Os backups e arquivos de mídia são enviados para um bucket S3.
+Possíveis integrações:
 
-Sempre que um novo arquivo é enviado ao S3, uma função Lambda é acionada para processar ou validar o conteúdo.
+EC2 + Lambda: automatização de start/stop de instâncias, escalonamento ou manutenção programada.
 
-O CloudWatch monitora o desempenho da EC2 e pode acionar outra Lambda para escalar recursos automaticamente ou enviar alertas.
+S3 + Lambda: processamento automático de arquivos enviados ao bucket, como redimensionamento de imagens, análise de logs ou validação de dados.
 
-Essa integração mostra como os serviços da AWS trabalham juntos para oferecer alta disponibilidade, automação e eficiência em aplicações na nuvem.
+CloudWatch + Lambda: monitoramento e execução de ações automáticas em resposta a métricas e alarmes.  
 
-🧭 Conclusão
+## 5. Exemplo de Arquitetura Integrada
 
-Gerenciar instâncias EC2 na AWS vai além de apenas criar servidores — envolve planejar armazenamento, automação, segurança e integração com outros serviços. Ao dominar EC2, EBS, S3 e Lambda, você constrói bases sólidas para arquiteturas modernas e escaláveis na nuvem.
+Um cenário prático envolvendo EC2, EBS, S3 e Lambda pode ser estruturado da seguinte forma:
+
+Uma instância EC2 hospeda a aplicação principal (exemplo: servidor web).
+
+O EBS é utilizado como armazenamento primário para o sistema e banco de dados.
+
+Backups e arquivos da aplicação são enviados para um bucket S3.
+
+Sempre que um novo arquivo é carregado no S3, uma função Lambda é acionada para processá-lo (por exemplo, converter ou validar o conteúdo).
+
+O CloudWatch monitora o desempenho da EC2 e pode acionar outra Lambda para executar ações automáticas, como escalar recursos ou enviar alertas.
+
+Essa integração exemplifica como os serviços da AWS se complementam, oferecendo automação, alta disponibilidade e eficiência operacional.  
+
+## 6. Conclusão
+
+Gerenciar instâncias EC2 vai muito além de apenas criar servidores.
+Envolve compreender e aplicar boas práticas de armazenamento, segurança, automação e integração com outros serviços da AWS.
+
+Ao dominar o EC2 em conjunto com o EBS, S3 e Lambda, é possível construir arquiteturas robustas, escaláveis e otimizadas para diferentes tipos de aplicações em nuvem.  
+
+## 7. Referências
+
+[Documentação Oficial do Amazon EC2](https://docs.aws.amazon.com/ec2/)  
+[Documentação Oficial do Amazon EBS](https://docs.aws.amazon.com/ebs/)  
+[Documentação Oficial do Amazon S3](https://docs.aws.amazon.com/s3/)  
+[Documentação Oficial do AWS Lambda](https://docs.aws.amazon.com/lambda/)  
+[AWS CloudWatch](https://docs.aws.amazon.com/cloudwatch/)
